@@ -3,8 +3,7 @@ import tkinter.messagebox
 from tkinter import *
 from tkinter import ttk, BOTH, LEFT, X, Y, VERTICAL, HORIZONTAL, RIGHT, TOP, N, S, W, SE, NW, NONE, BOTTOM, YES, NO, \
     filedialog
-import Image
-from PIL import ImageTk
+from PIL import ImageTk, Image
 from tkinter.font import Font
 import youtube_dl
 
@@ -62,7 +61,7 @@ class Functions():
 
     def Janela_1(self, **kwargs):
         self.root = tk.Tk()
-        self.root.geometry("650x350+360+180")
+        self.root.geometry("650x400+360+180")
         self.root.title("Download_Your_Video")
         self.root.resizable(True, True)
 
@@ -125,9 +124,9 @@ class Functions():
 
         #Quinto Frame:
         Frame_5 = tk.Frame(master=self.root)
-        Frame_5.pack(pady=(10,0))
+        Frame_5.pack(pady=(40,0))
 
-        self.IMG_1 = ImageTk.PhotoImage(Image.open("Images/checked.png"))
+        self.IMG_1 = ImageTk.PhotoImage(Image.open("Images/checked.png").convert("RGB"))
         self.Image_Label_1 = tk.Label(master=Frame_5, image=self.IMG_1)
         self.Image_Label_1.pack(side=tk.LEFT)
 

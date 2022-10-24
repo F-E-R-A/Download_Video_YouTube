@@ -13,41 +13,68 @@ class Functions():
         print("Iniciando o construtor...")
         pass
 
-    def Connect_1(self, **kwargs):
+    def Verification(self, d):
+        # Verificação de Erros e conclusão:
+        if d['status'] == 'finished':
+            self.MSG_Finished_Download()
+
+    def Connect_1(self, *args):
         Link_ = [self.Imp1.get()]
         GET_Select = self.Select1.get()
         try:
             self.LB3['text'] = ""
             self.LB4['text'] = ""
             if GET_Select == "MP4":
-                #print(Link_)
                 self.Baixar_MP4(Link_)
             if GET_Select == "MP3":
                 self.Baixar_MP3(Link_)
+            if GET_Select == "WAV":
+                self.Baixar_WAV(Link_)
+
         except youtube_dl.utils.DownloadError:
             self.LB3['text'] = "*"
             self.LB4['text'] = "O campo está VAZIO ou a URL é inválida."
+
+
 
     def Baixar_MP4(self, Link):
         link = Link
         ydl_options = {
                        'format': 'best',
-                       'outtmpl': 'C:/Users/%USERNAME%/Downloads/%(title)s.mp4'
+                       'outtmpl': 'C:/Users/%USERNAME%/Downloads/%(title)s.mp4',
+                       'noplaylist': True,
+                       'progress_hooks': [self.Verification],
                        }
         with youtube_dl.YoutubeDL(ydl_options) as ydl:
             ydl.download(link)
+        return ydl_options
 
     def Baixar_MP3(self, Link):
         link = Link
-        ydl_opetions = {
+        ydl_options = {
                         'format': 'bestaudio/best',
                         'outtmpl': 'C:/Users/%USERNAME%/Downloads/%(title)s.mp3',
+                        'noplaylist': True,
                         'postprogressor': [{'key': 'FFmpegExtractAudio',
                                             'preferredcodec': 'mp3',
                                             'preferredquality': '192',
                                            }]
                        }
-        with youtube_dl.YoutubeDL(ydl_opetions) as ydl:
+        with youtube_dl.YoutubeDL(ydl_options) as ydl:
+            ydl.download(link)
+
+    def Baixar_WAV(self, Link):
+        link = Link
+        ydl_options = {
+                        'format': 'bestaudio/best',
+                        'outtmpl': 'C:/Users/%USERNAME%/Downloads/%(title)s.wav',
+                        'noplaylist': True,
+                        'postprogressor': [{'key': 'FFmpegExtractAudio',
+                                            'preferredcodec': 'wav',
+                                            'preferredquality': '192',
+                                          }]
+                       }
+        with youtube_dl.YoutubeDL(ydl_options) as ydl:
             ydl.download(link)
 
 
@@ -123,26 +150,39 @@ class Functions():
         self.LB5.pack(pady=(20,0))
 
         #Quinto Frame:
-        Frame_5 = tk.Frame(master=self.root)
-        Frame_5.pack(pady=(40,0))
-
-        self.IMG_1 = ImageTk.PhotoImage(Image.open("Images/checked.png").convert("RGB"))
-        self.Image_Label_1 = tk.Label(master=Frame_5, image=self.IMG_1)
-        self.Image_Label_1.pack(side=tk.LEFT)
-
-        Font_2 = tk.font.Font(family='Verdana', size=12)
-        self.LB6 = tk.Label(master=Frame_5, text="Download Concluído!", font=Font_2, fg="green")
-        self.LB6.pack(fill=BOTH, side=tk.TOP, padx=(5,0))
-
-        Font_3 = tk.font.Font(family="Verdana", size=7)
-        self.LB7 = tk.Label(master=Frame_5, text="Seu arquivo está na pasta de Downloads.", font=Font_3, fg="green")
-        self.LB7.pack(side=TOP)
-
-
+        self.Frame_5 = tk.Frame(master=self.root)
+        self.Frame_5.pack(pady=(40,0))
 
         self.root.mainloop()
 
+    def MSG_Finished_Download(self):
+        # Mensagem de Download concluído:
+        self.IMG_1 = ImageTk.PhotoImage(Image.open("Images/checked.png").resize((35, 35)))
+        self.Image_Label_1 = tk.Label(master=self.Frame_5, image=self.IMG_1)
+        self.Image_Label_1.pack(side=tk.LEFT)
 
+        Font_2 = tk.font.Font(family='Verdana', size=12)
+        self.LB6 = tk.Label(master=self.Frame_5, text="Download Concluído!", font=Font_2, fg="green")
+        self.LB6.pack(fill=BOTH, side=tk.TOP, padx=(5, 0))
+
+        Font_3 = tk.font.Font(family="Verdana", size=7)
+        self.LB7 = tk.Label(master=self.Frame_5, text="Seu arquivo está na pasta de Downloads.", font=Font_3,
+                            fg="green")
+        self.LB7.pack(side=TOP)
+
+    def MSG_Error_Download(self):
+        # Mensagem de Erro no Download:
+        self.IMG_1 = ImageTk.PhotoImage(Image.open("Images/cross.png").resize((35, 35)))
+        self.Image_Label_1 = tk.Label(master=self.Frame_5, image=self.IMG_1)
+        self.Image_Label_1.pack(side=tk.LEFT)
+
+        Font_4 = tk.font.Font(family='Verdana', size=12)
+        self.LB8 = tk.Label(master=self.Frame_5, text="Erro no Download!", font=Font_4, fg="red")
+        self.LB8.pack(fill=BOTH, side=tk.TOP, padx=(5, 0))
+
+        Font_5 = tk.font.Font(family='Verdana', size=7)
+        self.LB9 = tk.Label(master=self.Frame_5, text="Algo de errado ocorreu. Tente Novamente.", font=Font_5, fg="red")
+        self.LB9.pack(side=TOP)
 
 
 
